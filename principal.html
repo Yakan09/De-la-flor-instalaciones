@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -6,19 +6,113 @@
     <link rel="stylesheet" href="estilo.css">
     <link rel="icon" href="images/favicon.webp" type="image/x-icon">
     <title>De la flor instalaciones</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
-        <!-- Pagina principal -->
         <a href="principal.html"><h1>Principal</h1></a>
-
-        <!-- Menú principal -->
         <div class="menu">
             <a href="material.html">Material</a>
             <a href="presupuesto.html">Presupuesto</a>
             <a href="conversor.html">Conversor</a>
         </div>
     </header>
-    
-    </body>
-    </html>
+
+    <main>
+        <section class="resumen">
+            <h2>Resumen de Materiales</h2>
+            <p>Total de materiales guardados: <span id="totalMateriales">0</span></p>
+            <a href="material.html">Ver Materiales</a>
+        </section>
+
+        <section class="presupuestos">
+            <h2>Presupuestos Recientes</h2>
+            <p>Total de presupuestos generados: <span id="totalPresupuestos">0</span></p>
+            <a href="presupuesto.html">Ver Presupuestos</a>
+        </section>
+
+        <section class="estadisticas">
+            <h2>Estadísticas de Materiales</h2>
+            <canvas id="graficoMateriales" width="400" height="100" style="max-width: 100%;"></canvas>
+        </section>
+        
+
+        <section class="acceso-rapido">
+            <h2>Acceso Rápido</h2>
+            <ul>
+                <li><a href="material.html">Agregar Material</a></li>
+                <li><a href="presupuesto.html">Generar Presupuesto</a></li>
+                <li><a href="calculadora.html">Conversor de Unidades</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        window.onload = function () {
+            // Cargar los materiales desde localStorage
+            const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
+            const totalMateriales = materiales.length;
+            document.getElementById('totalMateriales').textContent = totalMateriales;
+
+            // Contar materiales por categoría
+            const materialCounts = {};
+            materiales.forEach(material => {
+                materialCounts[material.categoria] = (materialCounts[material.categoria] || 0) + 1;
+            });
+
+            // Cargar los presupuestos desde localStorage
+            const presupuestos = JSON.parse(localStorage.getItem('presupuestos')) || [];
+            const totalPresupuestos = presupuestos.length;
+            document.getElementById('totalPresupuestos').textContent = totalPresupuestos;
+
+            // Crear gráfico de materiales
+            const ctx = document.getElementById('graficoMateriales').getContext('2d');
+            const labels = Object.keys(materialCounts);
+            const data = Object.values(materialCounts);
+
+            new Chart(ctx, {
+                type: 'bar', // Tipo de gráfico
+                data: {
+                    labels: labels, // Categorías de materiales
+                    datasets: [{
+                        label: 'Cantidad de Materiales',
+                        data: data, // Valores de cada categoría
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Materiales por Categoría'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
