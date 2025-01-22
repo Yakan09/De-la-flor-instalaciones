@@ -44,6 +44,19 @@ header .menu a:hover {
 main {
     padding: 1rem;
 }
+/*Footer*/
+footer {
+    /* Fijo en la parte inferior */
+   bottom: 0; /* Asegura que esté en la parte inferior */
+   width: 100%; /* Ocupa todo el ancho */
+   background-color: #333;
+   color: #f4f4f4;
+   padding: 15px 0; /* Espaciado interno */
+   text-align: center;
+   font-size: 0.9rem;
+   border-top: 2px solid white; /* Línea separadora blanca */
+   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
 
 /* Sección de materiales */
 section {
@@ -155,6 +168,168 @@ section button:hover {
 .tabla button:hover {
     background-color: #c82333;
 }
+/* Estilo para la sección de materiales */
+.material {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.material:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.material img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.material input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+    accent-color: #007bff;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.material input[type="checkbox"]:hover {
+    transform: scale(1.2);
+}
+
+.material label {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    gap: 10px;
+}
+
+.material input[type="number"] {
+    margin-left: auto;
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1rem;
+    color: #333;
+}
+
+.material input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+/* Estilo para la sección de búsqueda */
+.busqueda {
+    margin: 20px 0;
+    text-align: center;
+}
+
+#searchBar {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#searchBar:focus {
+    border-color: #007bff;
+}
+
+#searchButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#searchButton:hover {
+    background-color: #0056b3;
+}
+
+#searchButton:active {
+    background-color: #003f7f;
+}
+
+
+/* Estilo para el campo "Mano de Obra" */
+#manoDeObra {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+    font-size: 1.1rem;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+#manoDeObra:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+/* Centrar la sección de Mano de Obra */
+.mano-de-obra {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.mano-de-obra label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.mano-de-obra input {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+    font-size: 1.1rem;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.mano-de-obra input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+
 
 /* Responsive Design */
 @media (max-width: 600px) {
