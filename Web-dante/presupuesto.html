@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Presupuesto</title>
+    <style>
+        .material { margin-bottom: 10px; }
+        .material img { width: 50px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Presupuesto</h1>
+         <!-- Pagina principal -->
+         <a href="principal.html"><h1>Principal</h1></a>
+
+        <!-- Menú principal -->
+        <div class="menu">
+            <a href="material.html">Material</a>
+            <a href="presupuesto.html">Presupuesto</a>
+            <a href="calculadora.html">Calculadora</a>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Seleccionar Materiales</h2>
+            <div id="materialList">
+                <!-- Materiales dinámicamente cargados -->
+            </div>
+
+            <h2>Mano de Obra</h2>
+            <label for="manoDeObra">Costo Mano de Obra ($):</label>
+            <input type="number" id="manoDeObra" value="0">
+
+            <h2>Total</h2>
+            <p id="total">$0</p>
+
+            <button onclick="calcularPresupuesto()">Calcular Presupuesto</button>
+        </section>
+    </main>
+
+    <script>
+// Cargar materiales desde localStorage
+function cargarMateriales() {
+    const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
+    const materialList = document.getElementById('materialList');
+
+    materiales.forEach((material, index) => {
+        const div = document.createElement('div');
+        div.classList.add('material');
+        div.innerHTML = `
+            <label>
+                <input type="checkbox" id="material${index}" data-index="${index}" />
+                ${material.tipo} - Cantidad: ${material.cantidad} - Precio por Kilo: $${material.precio}
+                ${material.imagen ? `<img src="${material.imagen}" alt="${material.tipo}">` : ''}
+                <input type="number" id="cantidadMaterial${index}" value="1" min="1" max="${material.cantidad}" />
+            </label>
+        `;
+        materialList.appendChild(div);
+    });
+}
+
+// Calcular presupuesto
+function calcularPresupuesto() {
+    const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
+    let total = 0;
+    const manoDeObra = parseInt(document.getElementById('manoDeObra').value);
+
+    // Calcular el costo total de los materiales seleccionados
+    materiales.forEach((material, index) => {
+        const checkbox = document.getElementById(`material${index}`);
+        const cantidadSeleccionada = parseInt(document.getElementById(`cantidadMaterial${index}`).value);
+
+        if (checkbox.checked) {
+            total += cantidadSeleccionada * material.precio;  // Ajustar el precio según la cantidad seleccionada
+        }
+    });
+
+    // Añadir el costo de la mano de obra
+    total += manoDeObra;
+
+    // Mostrar el total
+    document.getElementById('total').innerText = `$${total}`;
+}
+
+// Llamar a la función para cargar los materiales cuando la página se cargue
+window.onload = cargarMateriales;
+
+    </script>
+</body>
+</html>
