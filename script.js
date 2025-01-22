@@ -8,7 +8,7 @@ function saveToLocalStorage() {
         tipo: row.cells[0].textContent,
         tamano: row.cells[1].textContent,
         cantidad: row.cells[2].textContent,
-        precio: row.cells[3].textContent,  // Guardamos el precio
+        precio: row.cells[3].textContent, // Guardamos el precio
         imagen: row.cells[4].querySelector('img') ? row.cells[4].querySelector('img').src : ''
     }));
 
@@ -36,7 +36,7 @@ function loadFromLocalStorage() {
             <td>${item.tipo}</td>
             <td>${item.tamano}</td>
             <td>${item.cantidad}</td>
-            <td>${item.precio}</td>  <!-- Mostrar precio -->
+            <td>${item.precio}</td> <!-- Mostrar precio -->
             <td>${item.imagen ? `<img src="${item.imagen}" alt="Imagen de material">` : 'No imagen'}</td>
             <td><button class="deleteBtn">Eliminar</button></td>
         `;
@@ -47,6 +47,9 @@ function loadFromLocalStorage() {
 // Llamar a la función para cargar los materiales cuando la página se cargue
 window.onload = function() {
     loadFromLocalStorage();
+
+    // Inicializar búsqueda
+    initSearchFunctionality();
 };
 
 // Agregar material al hacer submit
@@ -67,7 +70,7 @@ document.getElementById('materialForm').addEventListener('submit', function (e) 
         <td>${tipo}</td>
         <td>${tamano}</td>
         <td>${cantidad}</td>
-        <td>${precio}</td>  <!-- Mostrar precio -->
+        <td>${precio}</td> <!-- Mostrar precio -->
         <td>${imagen ? `<img src="${imagen}" alt="Imagen de material">` : 'No imagen'}</td>
         <td><button class="deleteBtn">Eliminar</button></td>
     `;
@@ -88,3 +91,24 @@ document.getElementById('materialTableBody').addEventListener('click', function 
         saveToLocalStorage();
     }
 });
+
+// Función de búsqueda
+function initSearchFunctionality() {
+    const searchBar = document.getElementById('searchBar');
+    const tableBody = document.getElementById('materialTableBody');
+
+    searchBar.addEventListener('input', () => {
+        const searchTerm = searchBar.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const materialType = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const size = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (materialType.includes(searchTerm) || size.includes(searchTerm)) {
+                row.style.display = ""; // Mostrar la fila
+            } else {
+                row.style.display = "none"; // Ocultar la fila
+            }
+        });
+    });
+}
