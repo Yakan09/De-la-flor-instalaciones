@@ -2,7 +2,7 @@
 function saveToLocalStorage() {
     const tableBody = document.getElementById('materialTableBody');
     const rows = Array.from(tableBody.querySelectorAll('tr'));
-    
+
     // Obtener los datos de cada fila
     const data = rows.map(row => ({
         tipo: row.cells[0].textContent,
@@ -22,7 +22,7 @@ function saveToLocalStorage() {
 function loadFromLocalStorage() {
     const data = JSON.parse(localStorage.getItem('materiales')) || [];
     const tableBody = document.getElementById('materialTableBody');
-    
+
     // Limpiar la tabla antes de cargar los nuevos datos
     tableBody.innerHTML = "";
 
@@ -60,28 +60,39 @@ document.getElementById('materialForm').addEventListener('submit', function (e) 
     const tamano = document.getElementById('tamano').value;
     const cantidad = document.getElementById('cantidad').value;
     const precio = document.getElementById('precio').value;
-    const imagen = document.getElementById('imagen').value;
+    const imagenInput = document.getElementById('imagen');
 
-    // Crear la nueva fila de la tabla
-    const tableBody = document.getElementById('materialTableBody');
-    const row = document.createElement('tr');
+    if (imagenInput.files.length === 0) {
+        alert("Por favor, selecciona una imagen.");
+        return;
+    }
 
-    row.innerHTML = `
-        <td>${tipo}</td>
-        <td>${tamano}</td>
-        <td>${cantidad}</td>
-        <td>${precio}</td> <!-- Mostrar precio -->
-        <td>${imagen ? `<img src="${imagen}" alt="Imagen de material">` : 'No imagen'}</td>
-        <td><button class="deleteBtn">Eliminar</button></td>
-    `;
+    const reader = new FileReader();
+    reader.onload = function () {
+        const imagen = reader.result; // Convertir imagen a base64
 
-    tableBody.appendChild(row);
+        // Crear la nueva fila de la tabla
+        const tableBody = document.getElementById('materialTableBody');
+        const row = document.createElement('tr');
 
-    // Guardar los datos en localStorage
-    saveToLocalStorage();
+        row.innerHTML = `
+            <td>${tipo}</td>
+            <td>${tamano}</td>
+            <td>${cantidad}</td>
+            <td>${precio}</td> <!-- Mostrar precio -->
+            <td><img src="${imagen}" alt="Imagen de material"></td>
+            <td><button class="deleteBtn">Eliminar</button></td>
+        `;
 
-    // Limpiar formulario
-    document.getElementById('materialForm').reset();
+        tableBody.appendChild(row);
+
+        // Guardar los datos en localStorage
+        saveToLocalStorage();
+
+        // Limpiar formulario
+        document.getElementById('materialForm').reset();
+    };
+    reader.readAsDataURL(imagenInput.files[0]);
 });
 
 // Eliminar fila
@@ -112,3 +123,4 @@ function initSearchFunctionality() {
         });
     });
 }
+    
