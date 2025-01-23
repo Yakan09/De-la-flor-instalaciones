@@ -39,13 +39,13 @@
                 <!-- Materiales dinámicamente cargados -->
             </div>
             <section class="mano-de-obra">
-                <label for="manoDeObra">Costo Mano de Obra ($):</label>
+                <label for="manoDeObra">Costo Mano de Obra (€):</label>
                 <input type="number" id="manoDeObra" value="0">
             </section>
             
 
             <h2>Total</h2>
-            <p id="total">$0</p>
+            <p id="total">€0</p>
 
             <button onclick="calcularPresupuesto()">Calcular Presupuesto</button>
             <button onclick="guardarPresupuesto()">Guardar Presupuesto</button>
@@ -59,7 +59,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; Todos los archivos estan protegidos</p>
+        <p>&copy; Todos los archivos están protegidos</p>
     </footer>
     <script>
 // Cargar materiales desde localStorage
@@ -73,7 +73,7 @@ function cargarMateriales() {
         div.innerHTML = `
             <label>
                 <input type="checkbox" id="material${index}" data-index="${index}" />
-                ${material.tipo} - Cantidad: ${material.cantidad} - Precio por Kilo: $${material.precio}
+                ${material.tipo} - Cantidad: ${material.cantidad} - Precio por Kilo: €${material.precio}
                 ${material.imagen ? `<img src="${material.imagen}" alt="${material.tipo}">` : ''}
                 <input type="number" id="cantidadMaterial${index}" value="1" min="1" max="${material.cantidad}" />
             </label>
@@ -99,7 +99,7 @@ function calcularPresupuesto() {
 
     total += manoDeObra;
 
-    document.getElementById('total').innerText = `$${total}`;
+    document.getElementById('total').innerText = `€${total}`;
 }
 
 // Guardar presupuesto con nombre
@@ -151,11 +151,11 @@ function mostrarPresupuestos() {
             <h3>${presupuesto.nombre}</h3>
             <ul>
                 ${presupuesto.materiales.map(mat => `
-                    <li>${mat.tipo} - Cantidad: ${mat.cantidad} - Precio: $${mat.precio}</li>
+                    <li>${mat.tipo} - Cantidad: ${mat.cantidad} - Precio: €${mat.precio}</li>
                 `).join('')}
             </ul>
-            <p>Mano de Obra: $${presupuesto.manoDeObra}</p>
-            <p class="total">Total: $${presupuesto.total}</p>
+            <p>Mano de Obra: €${presupuesto.manoDeObra}</p>
+            <p class="total">Total: €${presupuesto.total}</p>
         `;
         contenedor.appendChild(div);
     });
