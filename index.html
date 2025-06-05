@@ -8,20 +8,25 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <div class="formulario">
-        <h1>Inicio de sesión</h1>
-        <form id="loginForm">
-            <div class="username">
-                <input type="text" id="username" required>
-                <label>Nombre de usuario</label>
-            </div>
-            <div class="username">
-                <input type="password" id="password" required>
-                <label>Contraseña</label>
-            </div>
-            <input type="submit" value="Iniciar">
-        </form>
+      <div class="container">
+    <div class="form-box login">
+      <form action="#">
+        <h1>Login</h1>
+        <div class="input-box">
+          <input type="text" placeholder="Username" required>
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Password" required>
+          <i class='bx bxs-lock-alt'></i>
+        </div>
+        <div class="forgot-link">
+          <a href="#">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn">Login</button>
+      </form>
     </div>
+  </div>
     <script>
         // Credenciales válidas (usuario y contraseña cifrados)
         const validCredentials = {
