@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+
 * {
   margin: 0;
   padding: 0;
@@ -90,4 +91,15 @@ body {
 
 .btn:hover {
   background: #574fd6;
+}
+/*Boton de visualizar contraseña*/
+.input-box .toggle-password {
+  position: absolute;
+  right: 40px; /* Ajusta para que no choque con el icono de candado */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  user-select: none;
 }
