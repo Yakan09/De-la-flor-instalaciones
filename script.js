@@ -1,42 +1,75 @@
-// Función para guardar datos en localStorage
+// Cargar datos desde servidor y mostrar en tabla
+async function cargarDatosDesdeServidor() {
+    try {
+        const res = await fetch('http://localhost:PUERTO/api/materiales'); // Cambia PUERTO al que uses en el reenvío
+        if (!res.ok) throw new Error("Error cargando datos");
+
+        const data = await res.json();
+
+        const materiales = data.materiales;  // Aquí obtienes el array de materiales
+
+        const tableBody = document.getElementById('materialTableBody');
+        tableBody.innerHTML = ""; // Limpiar tabla
+
+        materiales.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.tipo || ''}</td>
+                <td>${item.tamano || ''}</td>
+                <td>${item.cantidad || ''}</td>
+                <td>${item.precio || ''}</td>
+                <td>${item.imagen ? `<img src="${item.imagen}" alt="Imagen de material">` : 'No imagen'}</td>
+                <td><button class="deleteBtn">Eliminar</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Mostrar otras tablas en consola (puedes adaptar esto para mostrar en otras secciones)
+        console.log("Herramientas:", data.herramientas);
+        console.log("Pagos:", data.pagos);
+        console.log("Personal:", data.personal);
+        console.log("Presupuestos:", data.presupuestos);
+
+    } catch (error) {
+        console.error(error);
+        alert("Error al cargar los datos desde el servidor");
+    }
+}
+
+// Guardar datos en localStorage
 function saveToLocalStorage() {
     const tableBody = document.getElementById('materialTableBody');
     const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-    // Obtener los datos de cada fila
     const data = rows.map(row => ({
         tipo: row.cells[0].textContent,
         tamano: row.cells[1].textContent,
         cantidad: row.cells[2].textContent,
-        precio: row.cells[3].textContent, // Guardamos el precio
+        precio: row.cells[3].textContent,
         imagen: row.cells[4].querySelector('img') ? row.cells[4].querySelector('img').src : ''
     }));
 
     console.log("Datos a guardar en localStorage:", data);
 
-    // Guardar los datos en localStorage
     localStorage.setItem('materiales', JSON.stringify(data));
 }
 
-// Cargar datos desde localStorage al cargar la página
+// Cargar datos desde localStorage (puedes usarlo para fallback o pruebas)
 function loadFromLocalStorage() {
     const data = JSON.parse(localStorage.getItem('materiales')) || [];
     const tableBody = document.getElementById('materialTableBody');
 
-    // Limpiar la tabla antes de cargar los nuevos datos
     tableBody.innerHTML = "";
 
-    // Verificar si hay datos en localStorage
     console.log("Datos cargados desde localStorage:", data);
 
-    // Cargar los materiales
     data.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${item.tipo}</td>
             <td>${item.tamano}</td>
             <td>${item.cantidad}</td>
-            <td>${item.precio}</td> <!-- Mostrar precio -->
+            <td>${item.precio}</td>
             <td>${item.imagen ? `<img src="${item.imagen}" alt="Imagen de material">` : 'No imagen'}</td>
             <td><button class="deleteBtn">Eliminar</button></td>
         `;
@@ -44,15 +77,34 @@ function loadFromLocalStorage() {
     });
 }
 
-// Llamar a la función para cargar los materiales cuando la página se cargue
-window.onload = function() {
-    loadFromLocalStorage();
+// Inicializar búsqueda en la tabla
+function initSearchFunctionality() {
+    const searchBar = document.getElementById('searchBar');
+    const tableBody = document.getElementById('materialTableBody');
 
-    // Inicializar búsqueda
+    searchBar.addEventListener('input', () => {
+        const searchTerm = searchBar.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const materialType = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const size = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (materialType.includes(searchTerm) || size.includes(searchTerm)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+}
+
+// Cuando la página carga, llama a cargar datos desde servidor y activa búsqueda
+window.onload = function() {
+    cargarDatosDesdeServidor();
     initSearchFunctionality();
 };
 
-// Agregar material al hacer submit
+// Formulario para agregar material
 document.getElementById('materialForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -69,9 +121,8 @@ document.getElementById('materialForm').addEventListener('submit', function (e) 
 
     const reader = new FileReader();
     reader.onload = function () {
-        const imagen = reader.result; // Convertir imagen a base64
+        const imagen = reader.result;
 
-        // Crear la nueva fila de la tabla
         const tableBody = document.getElementById('materialTableBody');
         const row = document.createElement('tr');
 
@@ -79,48 +130,24 @@ document.getElementById('materialForm').addEventListener('submit', function (e) 
             <td>${tipo}</td>
             <td>${tamano}</td>
             <td>${cantidad}</td>
-            <td>${precio}</td> <!-- Mostrar precio -->
+            <td>${precio}</td>
             <td><img src="${imagen}" alt="Imagen de material"></td>
             <td><button class="deleteBtn">Eliminar</button></td>
         `;
 
         tableBody.appendChild(row);
 
-        // Guardar los datos en localStorage
         saveToLocalStorage();
 
-        // Limpiar formulario
         document.getElementById('materialForm').reset();
     };
     reader.readAsDataURL(imagenInput.files[0]);
 });
 
-// Eliminar fila
+// Eliminar fila y guardar cambios
 document.getElementById('materialTableBody').addEventListener('click', function (e) {
     if (e.target.classList.contains('deleteBtn')) {
         e.target.closest('tr').remove();
         saveToLocalStorage();
     }
 });
-
-// Función de búsqueda
-function initSearchFunctionality() {
-    const searchBar = document.getElementById('searchBar');
-    const tableBody = document.getElementById('materialTableBody');
-
-    searchBar.addEventListener('input', () => {
-        const searchTerm = searchBar.value.toLowerCase();
-        const rows = tableBody.querySelectorAll('tr');
-
-        rows.forEach(row => {
-            const materialType = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-            const size = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            if (materialType.includes(searchTerm) || size.includes(searchTerm)) {
-                row.style.display = ""; // Mostrar la fila
-            } else {
-                row.style.display = "none"; // Ocultar la fila
-            }
-        });
-    });
-}
-    
