@@ -1,10 +1,19 @@
 /* General */
-body {
-    font-family: Arial, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
     background-color: #f8f9fa;
     color: #343a40;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Previene línea blanca lateral */
+}
+
+main {
+    padding: 1rem;
+    flex: 1; /* Empuja el footer hacia abajo */
 }
 
 /* Header */
@@ -128,7 +137,17 @@ section button:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tabla table {
+.tabla-contenedor {
+    width: 100%;
+    overflow-x: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+}
+
+
+.tabla-contenedor table {
+    min-width: 600px; /* Evita que la tabla se comprima demasiado en móviles */
     width: 100%;
     border-collapse: collapse;
 }
@@ -168,6 +187,24 @@ section button:hover {
 .tabla button:hover {
     background-color: #c82333;
 }
+
+/* Responsive solo para tabla */
+@media (max-width: 600px) {
+    .tabla-contenedor {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .tabla th, .tabla td {
+        font-size: 0.9rem;
+    }
+
+    .tabla img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
 /* Estilo para la sección de materiales */
 .material {
     display: flex;

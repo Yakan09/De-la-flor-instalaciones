@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/favicon.webp" type="image/x-icon">
-    <link rel="stylesheet" href="estilo.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="images/favicon.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="estilo.css" />
     <title>Presupuesto</title>
     <style>
-        .material { margin-bottom: 10px; }
-        .material img { width: 50px; }
+        .material {
+            margin-bottom: 10px;
+        }
+
+        .material img {
+            width: 50px;
+        }
+
         .presupuesto {
             border: 1px solid #ccc;
             margin: 10px 0;
             padding: 10px;
         }
-        .presupuesto h3 { margin: 5px 0; }
+
+        .presupuesto h3 {
+            margin: 5px 0;
+        }
+
         .total {
             color: red;
             font-weight: bold;
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Presupuesto</h1>
-        <a href="principal.html"><h1>Principal</h1></a>
+        <a href="principal.html">
+            <h1>Principal</h1>
+        </a>
         <div class="menu">
             <a href="material.html">Material</a>
             <a href="presupuesto.html">Presupuesto</a>
@@ -40,15 +54,15 @@
             </div>
             <section class="mano-de-obra">
                 <label for="manoDeObra">Costo Mano de Obra (€):</label>
-                <input type="number" id="manoDeObra" value="0">
+                <input type="number" id="manoDeObra" value="0" min="0" />
             </section>
-            
 
             <h2>Total</h2>
             <p id="total">€0</p>
 
             <button onclick="calcularPresupuesto()">Calcular Presupuesto</button>
             <button onclick="guardarPresupuesto()">Guardar Presupuesto</button>
+            <button onclick="generarPDF()">Generar PDF</button>
         </section>
 
         <section>
@@ -58,115 +72,19 @@
             </div>
         </section>
     </main>
+
     <footer>
         <p>&copy; Todos los archivos están protegidos</p>
     </footer>
-    <script>
-// Cargar materiales desde localStorage
-function cargarMateriales() {
-    const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
-    const materialList = document.getElementById('materialList');
+    <!-- Parte del HTML: añade esto donde quieras en tu HTML -->
+    <img id="logoEmpresa" src="images/" alt="Logo Empresa" style="width:100px;" />
 
-    materiales.forEach((material, index) => {
-        const div = document.createElement('div');
-        div.classList.add('material');
-        div.innerHTML = `
-            <label>
-                <input type="checkbox" id="material${index}" data-index="${index}" />
-                ${material.tipo} - Cantidad: ${material.cantidad} - Precio por Kilo: €${material.precio}
-                ${material.imagen ? `<img src="${material.imagen}" alt="${material.tipo}">` : ''}
-                <input type="number" id="cantidadMaterial${index}" value="1" min="1" max="${material.cantidad}" />
-            </label>
-        `;
-        materialList.appendChild(div);
-    });
-}
 
-// Calcular presupuesto
-function calcularPresupuesto() {
-    const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
-    let total = 0;
-    const manoDeObra = parseInt(document.getElementById('manoDeObra').value);
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    materiales.forEach((material, index) => {
-        const checkbox = document.getElementById(`material${index}`);
-        const cantidadSeleccionada = parseInt(document.getElementById(`cantidadMaterial${index}`).value);
-
-        if (checkbox.checked) {
-            total += cantidadSeleccionada * material.precio;
-        }
-    });
-
-    total += manoDeObra;
-
-    document.getElementById('total').innerText = `€${total}`;
-}
-
-// Guardar presupuesto con nombre
-function guardarPresupuesto() {
-    const materiales = JSON.parse(localStorage.getItem('materiales')) || [];
-    let presupuesto = { materiales: [], manoDeObra: 0, total: 0 };
-
-    materiales.forEach((material, index) => {
-        const checkbox = document.getElementById(`material${index}`);
-        const cantidadSeleccionada = parseInt(document.getElementById(`cantidadMaterial${index}`).value);
-
-        if (checkbox.checked) {
-            presupuesto.materiales.push({
-                tipo: material.tipo,
-                cantidad: cantidadSeleccionada,
-                precio: material.precio,
-            });
-            presupuesto.total += cantidadSeleccionada * material.precio;
-        }
-    });
-
-    presupuesto.manoDeObra = parseInt(document.getElementById('manoDeObra').value);
-    presupuesto.total += presupuesto.manoDeObra;
-
-    const nombrePresupuesto = prompt('Introduce un nombre para el presupuesto:');
-    if (nombrePresupuesto) {
-        presupuesto.nombre = nombrePresupuesto;
-
-        const presupuestos = JSON.parse(localStorage.getItem('presupuestos')) || [];
-        presupuestos.push(presupuesto);
-        localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
-        alert(`Presupuesto "${nombrePresupuesto}" guardado con éxito.`);
-        mostrarPresupuestos();
-    } else {
-        alert('No se ha guardado el presupuesto.');
-    }
-}
-
-// Mostrar presupuestos guardados
-function mostrarPresupuestos() {
-    const presupuestos = JSON.parse(localStorage.getItem('presupuestos')) || [];
-    const contenedor = document.getElementById('presupuestosGuardados');
-    contenedor.innerHTML = '';
-
-    presupuestos.forEach((presupuesto) => {
-        const div = document.createElement('div');
-        div.classList.add('presupuesto');
-        div.innerHTML = `
-            <h3>${presupuesto.nombre}</h3>
-            <ul>
-                ${presupuesto.materiales.map(mat => `
-                    <li>${mat.tipo} - Cantidad: ${mat.cantidad} - Precio: €${mat.precio}</li>
-                `).join('')}
-            </ul>
-            <p>Mano de Obra: €${presupuesto.manoDeObra}</p>
-            <p class="total">Total: €${presupuesto.total}</p>
-        `;
-        contenedor.appendChild(div);
-    });
-}
-
-// Cargar materiales y mostrar presupuestos al inicio
-window.onload = function() {
-    cargarMateriales();
-    mostrarPresupuestos();
-};
-
-    </script>
+    <!-- Script externo -->
+    <script src="presupuesto.js"></script>
 </body>
+
 </html>
